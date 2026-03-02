@@ -3,20 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IELTS Hub - WHV Prep</title>
+    <title>IELTS Gledis - Pink Study Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #0f172a; color: #e2e8f0; font-family: 'Inter', sans-serif; }
-        .glass-card { background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); }
-        .accent-border { border-left: 4px solid #10b981; }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        body { background-color: #fff1f2; color: #831843; font-family: 'Inter', sans-serif; }
+        .glass-card { background: rgba(255, 255, 255, 0.9); border: 1px solid #fbcfe8; backdrop-filter: blur(10px); }
+        .pink-button { background-color: #f472b6; color: white; transition: all 0.3s; }
+        .pink-button:hover { background-color: #ec4899; transform: scale(1.02); }
     </style>
 </head>
 <body class="pb-20">
 
-    <nav class="p-6 border-b border-slate-800 bg-slate-900/50">
+    <nav class="p-6 border-b border-pink-200 bg-white shadow-sm">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold tracking-tighter text-emerald-500 underline decoration-2 underline-offset-8">IELTS.WHV.2026</h1>
-            <div class
+            <h1 class="text-2xl font-bold text-pink-500"><i class="fas fa-heart mr-2"></i>IELTS.GLEDIS</h1>
+            <div class="text-xs uppercase tracking-widest text-pink-400 font-bold" id="liveClock"></div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 mt-8">
+        
+        <div class="grid lg:grid-cols-3 gap-8">
+            <div class="space-y-6">
+                <div class="glass-card p-6 rounded-3xl shadow-xl border-t-8 border-pink-400">
+                    <h3 class="font-bold uppercase text-xs text-pink-500 mb-4 tracking-widest">Misi Belajar Hari Ini</h3>
+                    <div id="dailyTask" class="text-slate-700 leading-relaxed">
+                        </div>
+                </div>
+
+                <div class="bg-pink-100 p-5 rounded-2xl border border-pink-200 text-sm">
+                    <h4 class="font-bold text-pink-600 mb-2 underline">Info Target 4.5 - 5.0</h4>
+                    <ul class="space-y-2 text-pink-800 italic">
+                        <li>• Gak perlu kosa kata dewa, yang penting nyambung.</li>
+                        <li>• Fokus supaya gak salah tulis (spelling).</li>
+                        <li>• Bicara lancar meski grammar simpel.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2 space-y-6">
+                <div class="glass-card p-8 rounded-3xl shadow-2xl">
+                    <div class="border-b border-pink-100 pb-4 mb-6">
+                        <h3 class="text-xl font-bold text-pink-600 flex items-center">
+                            <i class="fas fa-magic mr-3"></i> Evaluasi AI & Contoh Jawaban
+                        </h3>
+                        <p class="text-xs text-pink-400 mt-1">Masukkan tulisanmu (Writing) atau transkrip bicaramu (Speaking) di sini.</p>
+                    </div>
+
+                    <textarea id="userInput" rows="10" class="w-full bg-pink-50 border border-pink-100 rounded-2xl p-5 text-pink-700 outline-none focus:ring-2 focus:ring-pink-300 transition mb-6" placeholder="Contoh: Dear Sir, I am writing to complain about..."></textarea>
+                    
+                    <button onclick="getFeedback()" id="btnAksi" class="w-full pink-button font-bold py-4 rounded-2xl shadow-lg flex items-center justify-center gap-2">
+                        <i class="fas fa-paper-plane"></i> CEK SEKARANG
+                    </button>
+
+                    <div id="resultArea" class="mt-8 hidden border-t border-pink-100 pt-8 animate-fadeIn">
+                        <h4 class="text-xs font-bold uppercase text-pink-500 mb-4">Hasil Analisa Guru AI:</h4>
+                        <div id="aiResponse" class="bg-white p-6 rounded-2xl text-slate-700 text-sm leading-relaxed border border-pink-50 whitespace-pre-wrap"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const MY_KEY = "AIzaSyClSNTgqd6vvTCJJhoj4EnezTh5nmCZ8h8";
+
+        const roadmap = {
+            "Monday": `<b><i class="fas fa-headphones text-pink-500"></i> Senin: LISTENING</b><br><br>
+                       <b>Penjelasan:</b> Melatih telinga mendengar angka, nama, dan alamat.<br>
+                       <b>Tugas:</b> Buka YouTube "IELTS Listening Test". Fokus ke Section 1 saja.<br>
+                       <b>Contoh:</b> Mendengar "Road" bukan "Rode".`,
+            
+            "Tuesday": `<b><i class="fas fa-book-open text-pink-500"></i> Selasa: READING</b><br><br>
+                        <b>Penjelasan:</b> Mencari informasi di iklan atau pengumuman.<br>
+                        <b>Tugas:</b> Cari teks bahasa Inggris pendek tentang pengumuman sekolah/kantor.<br>
+                        <b>Teknik:</b> <i>Scanning</i> (cari angka/nama cepat).`,
+            
+            "Wednesday": `<b><i class="fas fa-pen-nib text-pink-500"></i> Rabu: WRITING TASK 1 (Surat)</b><br><br>
+                          <b>Penjelasan:</b> Menulis surat informal/formal 150 kata.<br>
+                          <b>Contoh:</b> Menulis surat ke teman untuk mengajak makan malam.<br>
+                          <b>Tips:</b> Gunakan "Dear..." di awal dan "Best regards" di akhir.`,
+            
+            "Thursday": `<b><i class="fas fa-comments text-pink-500"></i> Kamis: SPEAKING PART 1</b><br><br>
+                         <b>Penjelasan:</b> Tanya jawab simpel tentang dirimu.<br>
+                         <b>Contoh:</b> "Where do you live?" Jawab: "I live in a small apartment in Jakarta."<br>
+                         <b>Latihan:</b> Rekam suaramu saat menjawab hobi/pekerjaan.`,
+            
+            "Friday": `<b><i class="fas fa-file-alt text-pink-500"></i> Jumat: WRITING TASK 2 (Essay)</b><br><br>
+                       <b>Penjelasan:</b> Memberikan pendapat tentang suatu masalah.<br>
+                       <b>Target 5.0:</b> Tulis minimal 250 kata. Pastikan ada Introduction, Body, dan Conclusion.`,
+            
+            "Saturday": `<b><i class="fas fa-star text-pink-500"></i> Sabtu: VOCABULARY KUNCI</b><br><br>
+                         <b>Fokus:</b> Hafalkan kata sambung (Connectors).<br>
+                         <b>Contoh:</b> <i>However, Therefore, Moreover, On the other hand.</i>`,
+            
+            "Sunday": `<b><i class="fas fa-coffee text-pink-500"></i> Minggu: RECHARGE & MOVIE</b><br><br>
+                       <b>Tugas:</b> Tonton film favoritmu tapi pakai subtitle Bahasa Inggris (English Subtitle). Biarkan telingamu terbiasa.`
+        };
+
+        const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const now = new Date();
+        document.getElementById('liveClock').innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' });
+        document.getElementById('dailyTask').innerHTML = roadmap[days[now.getDay()]];
+
+        async function getFeedback() {
+            const input = document.getElementById('userInput').value;
+            const resArea = document.getElementById('resultArea');
+            const resDiv = document.getElementById('aiResponse');
+            const btn = document.getElementById('btnAksi');
+
+            if(!input) { alert("Tuliskan jawaban latihanmu dulu ya Gledis!"); return; }
+
+            btn.disabled = true;
+            btn.innerHTML = "Guru AI sedang mengecek...";
+            resArea.classList.remove('hidden');
+            resDiv.innerHTML = "Mohon tunggu sebentar...";
+
+            try {
+                const prompt = `Kamu adalah penguji IELTS ramah. Evaluasi tulisan/transkrip ini untuk Gledis yang merupakan pemula (Target 4.5-5.0).
+                Berikan respon dengan bahasa Indonesia:
+                1. Skor Band (Estimasi).
+                2. Kesalahan Grammar (Jelaskan kenapa salah dan berikan contoh benarnya).
+                3. Contoh Jawaban Versi 5.0 (Berikan contoh tulisan yang seharusnya jika jawaban user masih kurang).
+                4. Semangat untuk Gledis.
+                
+                Input: ${input}`;
+
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${MY_KEY}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                });
+
+                const data = await response.json();
+                resDiv.innerHTML = data.candidates[0].content.parts[0].text;
+            } catch (e) {
+                resDiv.innerHTML = "Gagal terhubung. Cek koneksi internetmu.";
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = "<i class='fas fa-paper-plane'></i> CEK SEKARANG";
+            }
+        }
+    </script>
+</body>
+</html>
