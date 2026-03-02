@@ -1,51 +1,66 @@
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IELTS Gledis - Study Hub</title>
+    <title>IELTS Gledis - Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { background-color: #fff1f2; color: #831843; font-family: 'Inter', sans-serif; }
-        .glass-card { background: rgba(255, 255, 255, 0.9); border: 1px solid #fbcfe8; backdrop-filter: blur(10px); border-radius: 24px; }
-        .pink-button { background-color: #f472b6; color: white; transition: all 0.3s; box-shadow: 0 4px 14px 0 rgba(244, 114, 182, 0.39); }
-        .pink-button:active { transform: scale(0.95); }
+        .glass-card { background: rgba(255, 255, 255, 0.9); border: 1px solid #fbcfe8; backdrop-filter: blur(10px); border-radius: 20px; }
+        .pink-button { background-color: #f472b6; color: white; transition: 0.3s; box-shadow: 0 4px 10px rgba(244, 114, 182, 0.4); }
+        .day-btn { padding: 10px; border-radius: 12px; border: 1px solid #f9a8d4; cursor: pointer; text-align: center; font-size: 11px; background: white; transition: 0.2s; }
+        .day-btn.active { background-color: #f472b6; color: white; transform: scale(1.05); }
     </style>
 </head>
 <body class="pb-20">
 
-    <nav class="p-6 border-b border-pink-200 bg-white shadow-sm mb-6">
+    <nav class="p-4 bg-white shadow-sm sticky top-0 z-50 border-b border-pink-100">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-pink-500"><i class="fas fa-heart mr-2"></i>IELTS.GLEDIS</h1>
-            <div class="text-[10px] uppercase font-bold text-pink-300" id="liveClock"></div>
+            <h1 class="text-xl font-bold text-pink-500"><i class="fas fa-heart mr-2"></i>IELTS.GLEDIS</h1>
+            <div class="flex items-center gap-2">
+                <input type="password" id="userApiKey" class="text-[10px] p-2 border border-pink-100 rounded-lg outline-none w-32 focus:ring-1 focus:ring-pink-400" placeholder="Klik 'Simpan Key' setelah tempel">
+                <button onclick="saveKey()" class="text-[10px] bg-emerald-500 text-white px-2 py-2 rounded-lg font-bold">SIMPAN KEY</button>
+            </div>
         </div>
     </nav>
 
-    <div class="container mx-auto px-4">
+    <div class="container mx-auto px-4 mt-6">
         <div class="grid lg:grid-cols-3 gap-6">
             
             <div class="space-y-6">
-                <div class="glass-card p-6 border-t-8 border-pink-400">
-                    <h3 class="font-bold uppercase text-[10px] text-pink-500 mb-4 tracking-widest">Target Hari Ini</h3>
-                    <div id="dailyTask" class="text-sm text-slate-700 leading-relaxed"></div>
+                <div class="glass-card p-5 shadow-lg">
+                    <h3 class="font-bold text-pink-600 mb-4 border-b border-pink-50 pb-2 flex items-center gap-2">
+                        <i class="fas fa-calendar-alt"></i> JADWAL BELAJAR
+                    </h3>
+                    <div class="grid grid-cols-2 gap-2 mb-4" id="daySelector">
+                        <div onclick="showDay('Monday')" class="day-btn" id="btn-Monday">SENIN</div>
+                        <div onclick="showDay('Tuesday')" class="day-btn" id="btn-Tuesday">SELASA</div>
+                        <div onclick="showDay('Wednesday')" class="day-btn" id="btn-Wednesday">RABU</div>
+                        <div onclick="showDay('Thursday')" class="day-btn" id="btn-Thursday">KAMIS</div>
+                        <div onclick="showDay('Friday')" class="day-btn" id="btn-Friday">JUMAT</div>
+                        <div onclick="showDay('Saturday')" class="day-btn" id="btn-Saturday">SABTU</div>
+                        <div onclick="showDay('Sunday')" class="day-btn col-span-2" id="btn-Sunday">MINGGU</div>
+                    </div>
+                    
+                    <div id="materiHarian" class="p-4 bg-pink-50/50 rounded-xl border border-pink-100 text-sm min-h-[150px]"></div>
                 </div>
             </div>
 
             <div class="lg:col-span-2 space-y-6">
-                <div class="glass-card p-6 shadow-xl">
-                    <h3 class="text-lg font-bold text-pink-600 mb-4 flex items-center">
-                        <i class="fas fa-pencil-alt mr-2"></i> Latihan Menulis / Bicara
+                <div class="glass-card p-6 shadow-xl border-b-4 border-pink-400">
+                    <h3 class="text-lg font-bold text-pink-600 mb-4 flex items-center gap-2">
+                        <i class="fas fa-robot"></i> GURU AI EVALUATOR
                     </h3>
-                    <textarea id="userInput" rows="8" class="w-full bg-pink-50 border border-pink-100 rounded-2xl p-4 text-pink-700 outline-none focus:ring-2 focus:ring-pink-300 mb-4" placeholder="Ketik jawabanmu di sini..."></textarea>
+                    <textarea id="userInput" rows="8" class="w-full bg-white border border-pink-100 rounded-2xl p-4 text-slate-700 outline-none focus:ring-2 focus:ring-pink-200 mb-4" placeholder="Ketik latihan Writing atau transkrip Speaking-mu..."></textarea>
                     
-                    <button onclick="getFeedback()" id="btnAksi" class="w-full pink-button font-bold py-4 rounded-2xl flex items-center justify-center gap-2">
-                        <i class="fas fa-magic"></i> CEK SEKARANG
+                    <button onclick="getFeedback()" id="btnAksi" class="w-full pink-button font-bold py-4 rounded-xl flex items-center justify-center gap-2">
+                        <i class="fas fa-search"></i> ANALISA JAWABAN SAYA
                     </button>
 
-                    <div id="resultArea" class="mt-6 hidden border-t border-pink-100 pt-6">
-                        <h4 class="text-[10px] font-bold uppercase text-pink-400 mb-3">Hasil Analisa Guru AI:</h4>
-                        <div id="aiResponse" class="bg-white p-5 rounded-2xl text-slate-700 text-sm leading-relaxed border border-pink-50 whitespace-pre-wrap"></div>
+                    <div id="resultArea" class="mt-8 hidden border-t border-pink-100 pt-6">
+                        <div id="aiResponse" class="bg-white p-6 rounded-2xl text-slate-700 text-sm leading-relaxed border border-pink-50 shadow-inner whitespace-pre-wrap"></div>
                     </div>
                 </div>
             </div>
@@ -53,54 +68,72 @@
     </div>
 
     <script>
-        // API KEY (Disusun terpisah agar tidak mudah terbaca sistem GitHub)
-        const p1 = "AIzaSyClSNTgqd6v";
-        const p2 = "vTCJJhoj4EnezTh5nmCZ8h8";
-        const KEY = p1 + p2;
-
+        // Data Materi
         const roadmap = {
-            "Monday": "<b>Senin: Listening</b><br>Dengerin podcast bahasa Inggris 10 menit aja.",
-            "Tuesday": "<b>Selasa: Reading</b><br>Baca 1 berita luar negeri, cari 5 kata baru.",
-            "Wednesday": "<b>Rabu: Writing (Surat)</b><br>Tulis surat pendek buat temen dalam B. Inggris.",
-            "Thursday": "<b>Kamis: Speaking</b><br>Ngomong depan cermin: Kenalin diri kamu.",
-            "Friday": "<b>Jumat: Writing (Essay)</b><br>Tulis opini: Kamu lebih suka HP atau Laptop?",
-            "Saturday": "<b>Sabtu: Vocab</b><br>Cek lagi semua kata baru yang kamu dapet.",
-            "Sunday": "<b>Minggu: Santai</b><br>Nonton film pake subtitle Inggris ya!"
+            "Monday": { t: "Listening - Spelling & Numbers", d: "Belajar catat nama orang dan nomor telepon (Section 1).", l: "https://www.youtube.com/results?search_query=ielts+listening+spelling+and+numbers", task: "Pastikan tidak salah tulis huruf A vs E!" },
+            "Tuesday": { t: "Reading - General Training", d: "Baca brosur atau iklan pekerjaan di Australia.", l: "https://www.youtube.com/results?search_query=ielts+general+reading+section+1", task: "Cari 5 kata baru tentang dunia kerja." },
+            "Wednesday": { t: "Writing Task 1 - Letters", d: "Cara nulis surat izin sakit atau ajak teman jalan.", l: "https://www.youtube.com/results?search_query=ielts+general+writing+task+1+informal+letter", task: "Tulis surat 150 kata buat temanmu." },
+            "Thursday": { t: "Speaking Part 1", d: "Tanya jawab santai tentang hobi dan pekerjaan.", l: "https://www.youtube.com/results?search_query=ielts+speaking+part+1+topics", task: "Coba bicara depan kaca selama 2 menit." },
+            "Friday": { t: "Writing Task 2 - Essay", d: "Belajar bikin opini yang jelas (Target 4.5+).", l: "https://www.youtube.com/results?search_query=ielts+writing+task+2+simple+structure", task: "Bikin 3 paragraf tentang pentingnya Internet." },
+            "Saturday": { t: "Grammar & Connectors", d: "Pake kata sambung: Because, But, However, So.", l: "https://www.youtube.com/results?search_query=ielts+grammar+connectors+for+beginners", task: "Gabungkan 2 kalimat pake kata 'However'." },
+            "Sunday": { t: "Movie & Relax", d: "Nonton vlog WHV Australia tanpa subtitle Indo.", l: "https://www.youtube.com/results?search_query=whv+australia+vlog", task: "Catat 3 tempat di Australia yang kamu pengen!" }
         };
 
-        const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-        const d = new Date();
-        document.getElementById('liveClock').innerText = d.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' });
-        document.getElementById('dailyTask').innerHTML = roadmap[days[d.getDay()]];
+        // Fungsi Simpan Key di Browser
+        function saveKey() {
+            const key = document.getElementById('userApiKey').value;
+            if(key) {
+                localStorage.setItem('gledis_key', key);
+                alert("Kunci Berhasil Disimpan! Kamu nggak perlu tempel lagi besok.");
+            }
+        }
+
+        // Cek apakah ada key yang tersimpan saat web dibuka
+        window.onload = () => {
+            const savedKey = localStorage.getItem('gledis_key');
+            if(savedKey) document.getElementById('userApiKey').value = savedKey;
+            showDay(new Intl.DateTimeFormat('en-US', {weekday: 'long'}).format(new Date()));
+        };
+
+        function showDay(day) {
+            document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-' + day).classList.add('active');
+            const data = roadmap[day];
+            document.getElementById('materiHarian').innerHTML = `
+                <h4 class="font-bold text-pink-500 mb-1">${data.t}</h4>
+                <p class="text-[11px] mb-3">${data.d}</p>
+                <a href="${data.l}" target="_blank" class="block bg-red-400 text-white text-center py-2 rounded-lg text-[10px] mb-2 font-bold italic">Tonton Video Tutorial</a>
+                <p class="text-[10px] text-pink-400"><b>Tugas:</b> ${data.task}</p>
+            `;
+        }
 
         async function getFeedback() {
+            const key = document.getElementById('userApiKey').value;
             const input = document.getElementById('userInput').value;
             const resArea = document.getElementById('resultArea');
             const resDiv = document.getElementById('aiResponse');
             const btn = document.getElementById('btnAksi');
 
-            if(!input) return alert("Ketik sesuatu dulu ya Gledis!");
+            if(!key) return alert("Tempel API Key-nya sekali saja, lalu klik Simpan Key!");
+            if(!input) return alert("Isi latihannya dulu ya Gledis!");
 
-            btn.disabled = true;
-            btn.innerText = "Sabar ya, lagi dicek...";
+            btn.disabled = true; btn.innerText = "Guru AI Lagi Mikir...";
             resArea.classList.remove('hidden');
-            resDiv.innerHTML = "Guru AI lagi baca tulisanmu...";
+            resDiv.innerHTML = "Lagi dibaca ya...";
 
             try {
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${KEY}`;
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${key}`;
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ contents: [{ parts: [{ text: `Analisa tulisan IELTS General ini untuk pemula target 4.5. Berikan koreksi grammar dan contoh benarnya dalam Bahasa Indonesia: ${input}` }] }] })
+                    body: JSON.stringify({ contents: [{ parts: [{ text: `Kamu Guru IELTS ramah. Gledis pemula target 4.5. Analisa tulisan ini, beri skor, daftar salahnya, dan contoh benarnya: ${input}` }] }] })
                 });
-
                 const data = await response.json();
                 resDiv.innerHTML = data.candidates[0].content.parts[0].text;
             } catch (e) {
-                resDiv.innerHTML = "Koneksi atau Kunci AI bermasalah. Coba refresh atau cek API Key kamu lagi.";
+                resDiv.innerHTML = "Kuncinya error atau mati. Buat kunci baru di AI Studio ya!";
             } finally {
-                btn.disabled = false;
-                btn.innerText = "CEK SEKARANG";
+                btn.disabled = false; btn.innerText = "ANALISA JAWABAN SAYA";
             }
         }
     </script>
